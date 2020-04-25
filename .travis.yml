@@ -12,10 +12,10 @@ script:
     - docker run -e CI=true marcfefischer/react-test npm test
 
 after_success:
-    - docker build marcfefischer/multi-client ./client
-    - docker build marcfefischer/multi-nginx ./nginx
-    - docker build marcfefischer/multi-server ./server
-    - docker build marcfefischer/multi-worker ./worker
+    - docker build -t marcfefischer/multi-client ./client
+    - docker build -t marcfefischer/multi-nginx ./nginx
+    - docker build -t marcfefischer/multi-server ./server
+    - docker build -t marcfefischer/multi-worker ./worker
     # login to docker Hub
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
     # Push those images to docker Hub
