@@ -1,0 +1,25 @@
+language: generic
+
+sudo: required
+
+services:
+    - docker 
+    
+before_install:
+    - docker build -t marcfefischer/react-test -f ./client/dockerfile.dev
+
+script:
+    - docker run -e CI=true marcfefischer/react-test npm test
+
+after_success:
+    - docker build marcfefischer/multi-client ./client
+    - docker build marcfefischer/multi-nginx ./nginx
+    - docker build marcfefischer/multi-server ./server
+    - docker build marcfefischer/multi-worker ./worker
+    # login to docker Hub
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    # Push those images to docker Hub
+    - docker push marcfefischer/multi-client
+    - docker push marcfefischer/multi-nginx
+    - docker push marcfefischer/multi-server
+    - docker push marcfefischer/multi-worker 
